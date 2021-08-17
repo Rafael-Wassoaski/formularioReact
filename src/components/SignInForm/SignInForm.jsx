@@ -1,23 +1,23 @@
 import React from "react";
-import {Button, InputLabel, Input, Checkbox  } from "@material-ui/core";
+import {Button, TextField, Switch, FormControlLabel} from "@material-ui/core";
 
 function SignInForm() {
+
+
     return (
         <form>
-            <InputLabel>Nome</InputLabel>
-            <Input type='text' color='primary'/>
+            <TextField id='nome' label='Nome' type='text' variant='outlined' margin='normal' fullWidth/>
+            <TextField id='sobrenome' label='Sobrenome' type='text' variant='outlined' margin='normal' fullWidth/>
+            <TextField id='cpf' label='CPF' type='text' variant='outlined' margin='normal' fullWidth/>
 
-            <InputLabel>Sobrenome</InputLabel>
-            <Input type='text'  color='primary'/>
+            <FormControlLabel control={
+                <Switch name='Promoções' defaultChecked={true} color='primary'/>
+            } label='Promoções'/>
 
-            <InputLabel>CPF</InputLabel>
-            <Input type='text'  color='primary'/>
+            <FormControlLabel control={
+                <Switch name='Novidades' color='primary'/>
+            } label='Novidades'/>
 
-            <InputLabel>Promoções</InputLabel>
-            <Checkbox color='primary'/>
-
-            <InputLabel>Novidades</InputLabel>
-            <Checkbox color='primary'/>
 
             <Button type='submit' variant='contained' color='primary'>Cadastrar</Button>
         </form>
