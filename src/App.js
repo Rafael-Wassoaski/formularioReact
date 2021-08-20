@@ -11,10 +11,14 @@ class App extends Component {
                 <Typography variant='h3' align='center' component='h1'>
                     Formulario de cadastro
                 </Typography>
-                <SignInForm/>
+                <SignInForm aoEnviar={aoEnviarFormulario}/>
             </Container>
         );
     }
+}
+
+function aoEnviarFormulario(dados){
+    console.log(dados);
 }
 
 export default App;

@@ -1,24 +1,22 @@
 import React, {useState} from "react";
 import {Button, TextField, Switch, FormControlLabel} from "@material-ui/core";
 
-function SignInForm() {
+function SignInForm({aoEnviar}) {
     const [nome, setNome] = useState('');
     const [sobreNome, setSobreNome] = useState('');
     const [cpf, setCpf] = useState('');
+    const [promocoes, setPromocoes] = useState(true);
+    const [novidades, setNovidade] = useState(true);
 
     return (
         <form onSubmit={(event) => {
             event.preventDefault();
-            console.log(nome);
-            console.log(sobreNome);
+            aoEnviar({nome, sobreNome, cpf, novidades, promocoes});
         }}>
             <TextField
                 value={nome}
                 onChange={(event) => {
                     let tmpNome = event.target.value;
-                    if (tmpNome.length >= 3) {
-                        tmpNome = tmpNome.substr(0, 3);
-                    }
                     setNome(tmpNome);
                 }}
                 id='nome' label='Nome' type='text' variant='outlined' margin='normal' fullWidth/>
@@ -41,11 +39,22 @@ function SignInForm() {
                 }} id='cpf' label='CPF' type='text' variant='outlined' margin='normal' fullWidth/>
 
             <FormControlLabel control={
-                <Switch name='Promoções' defaultChecked={true} color='primary'/>
+                <Switch name='Promoções'
+                        checked={promocoes}
+
+                        onChange={(event) => {
+                            setPromocoes(event.target.checked);
+                        }}
+                        color='primary'/>
             } label='Promoções'/>
 
             <FormControlLabel control={
-                <Switch name='Novidades' color='primary'/>
+                <Switch name='Novidades'
+                        checked={novidades}
+                        onChange={(event) => {
+                            setNovidade(event.target.checked);
+                        }}
+                        color='primary'/>
             } label='Novidades'/>
 
 
