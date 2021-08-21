@@ -1,12 +1,15 @@
 import React, {useState} from "react";
 import {Button, TextField, Switch, FormControlLabel} from "@material-ui/core";
 
-function SignInForm({aoEnviar}) {
+function SignInForm({aoEnviar, validaCPF}) {
     const [nome, setNome] = useState('');
     const [sobreNome, setSobreNome] = useState('');
     const [cpf, setCpf] = useState('');
     const [promocoes, setPromocoes] = useState(true);
     const [novidades, setNovidade] = useState(true);
+    const [erros, setErros] = useState({
+        cpf: {valido: true, helpText: ''}
+    });
 
     return (
         <form onSubmit={(event) => {
@@ -30,6 +33,12 @@ function SignInForm({aoEnviar}) {
 
             <TextField
                 value={cpf}
+                helperText={erros.cpf.helpText}
+                error={!erros.cpf.valido}
+                onBlur={(event)=>{
+                    const isValid = validaCPF(cpf);
+                    setErros(isValid);
+                }}
                 onChange={(event) => {
                     let tmpCPF = event.target.value;
                     if (tmpCPF.length <= 11) {
