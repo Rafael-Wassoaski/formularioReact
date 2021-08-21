@@ -1,25 +1,33 @@
-import logo from './logo.svg';
 import './App.css';
+import {Component} from "react";
+import SignInForm from './components/SignInForm/SignInForm';
+import {Container, Typography} from "@material-ui/core";
+import 'fontsource-roboto'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+    render() {
+        return (
+            <Container component='article' maxWidth='sm'>
+                <Typography variant='h3' align='center' component='h1'>
+                    Formulario de cadastro
+                </Typography>
+                <SignInForm aoEnviar={aoEnviarFormulario}
+                            validaCPF={validaCPF}
+                />
+            </Container>
+        );
+    }
+}
+
+function aoEnviarFormulario(dados) {
+    console.log(dados);
+}
+
+function validaCPF(cpf) {
+    if (cpf.length != 11) {
+        return {cpf: {valido: false, helpText: 'O CPF deve ter 11 dígitos'}}
+    }
+    return {cpf: {valido: true, helpText: ''}}
 }
 
 export default App;
