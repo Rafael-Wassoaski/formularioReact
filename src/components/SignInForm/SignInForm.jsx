@@ -4,13 +4,13 @@ import UserData from "./UserData";
 import DeliveryForm from "./DeliveryForm";
 import {Step, StepLabel, Stepper, Typography} from "@material-ui/core";
 
-function SignInForm({aoEnviar, validaCPF}) {
+function SignInForm({aoEnviar, validacoes}) {
     const [actualStep, setActualStep] = useState(0);
     const [collectedData, setCollectedData] = useState({});
 
     const forms = [
         <UserData aoEnviar={getData}/>,
-        <PersonalData aoEnviar={getData} validaCPF={validaCPF}/>,
+        <PersonalData aoEnviar={getData}/>,
         <DeliveryForm aoEnviar={getData}/>,
         <Typography variant='h5'>Obrigado por se cadastrar</Typography>
     ];

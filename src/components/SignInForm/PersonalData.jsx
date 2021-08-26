@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import {Button, TextField, Switch, FormControlLabel} from "@material-ui/core";
+import Validations from "../../contexts/Validations";
 
-function PersonalData({aoEnviar, validaCPF}) {
+function PersonalData({aoEnviar}) {
     const [nome, setNome] = useState('');
     const [sobreNome, setSobreNome] = useState('');
     const [cpf, setCpf] = useState('');
@@ -11,10 +12,31 @@ function PersonalData({aoEnviar, validaCPF}) {
         cpf: {valido: true, helpText: ''}
     });
 
+    const validar = useContext(Validations);
+
+    function validarCampos(event) {
+        const {name, value} = event.target;
+        const isValid = validar[name](value);
+        const novoEstado = {...erros};
+        novoEstado[name] = isValid
+        setErros(novoEstado);
+    }
+
+    function isValid(){
+        for(let error in erros){
+            if(!erros[error].valido){
+                return false;
+            }
+        }
+        return true;
+    }
+
     return (
         <form onSubmit={(event) => {
             event.preventDefault();
-            aoEnviar({nome, sobreNome, cpf, novidades, promocoes});
+            if(isValid()){
+                aoEnviar({nome, sobreNome, cpf, novidades, promocoes});
+            }
         }}>
             <TextField
                 value={nome}
@@ -33,12 +55,10 @@ function PersonalData({aoEnviar, validaCPF}) {
 
             <TextField
                 value={cpf}
+                name='cpf'
                 helperText={erros.cpf.helpText}
                 error={!erros.cpf.valido}
-                onBlur={(event) => {
-                    const isValid = validaCPF(cpf);
-                    setErros(isValid);
-                }}
+                onBlur={validarCampos}
                 onChange={(event) => {
                     let tmpCPF = event.target.value;
                     if (tmpCPF.length <= 11) {
@@ -67,7 +87,7 @@ function PersonalData({aoEnviar, validaCPF}) {
             } label='Novidades'/>
 
 
-            <Button type='submit' variant='contained' color='primary'>Cadastrar</Button>
+            <Button type='submit' variant='contained' color='primary'>Próximo</Button>
         </form>
     )
 }

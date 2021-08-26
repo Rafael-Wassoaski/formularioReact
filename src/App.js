@@ -3,6 +3,8 @@ import {Component} from "react";
 import SignInForm from './components/SignInForm/SignInForm';
 import {Container, Typography} from "@material-ui/core";
 import 'fontsource-roboto'
+import {validarCPF, validarSenha} from './models/Cadastro';
+import Validations from "./contexts/Validations";
 
 class App extends Component {
     render() {
@@ -11,9 +13,9 @@ class App extends Component {
                 <Typography variant='h3' align='center' component='h1'>
                     Formulário de cadastro
                 </Typography>
-                <SignInForm aoEnviar={aoEnviarFormulario}
-                            validaCPF={validaCPF}
-                />
+                <Validations.Provider value={{cpf: validarCPF, senha: validarSenha}}>
+                    <SignInForm aoEnviar={aoEnviarFormulario}/>
+                </Validations.Provider>
             </Container>
         );
     }
@@ -23,11 +25,5 @@ function aoEnviarFormulario(dados) {
     console.log(dados);
 }
 
-function validaCPF(cpf) {
-    if (cpf.length != 11) {
-        return {cpf: {valido: false, helpText: 'O CPF deve ter 11 dígitos'}}
-    }
-    return {cpf: {valido: true, helpText: ''}}
-}
 
 export default App;
