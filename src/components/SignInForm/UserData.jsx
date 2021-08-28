@@ -1,36 +1,18 @@
 import React, {useContext, useState} from "react";
 import {Button, TextField} from "@material-ui/core";
 import Validations from "../../contexts/Validations";
+import useErrors from "../../hooks/useErrors";
 
 function UserData({aoEnviar}) {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [erros, setErros] = useState({
-        senha: {valido: true, helpText: ''}
-    });
-
     const validar = useContext(Validations);
+    const [erros, validarCampos, possoEnviar] = useErrors(validar);
 
-    function validarCampos(event) {
-        const {name, value} = event.target;
-        const isValid = validar[name](value);
-        const novoEstado = {...erros};
-        novoEstado[name] = isValid
-        setErros(novoEstado);
-    }
-
-    function isValid(){
-        for(let error in erros){
-            if(!erros[error].valido){
-                return false;
-            }
-        }
-        return true;
-    }
     return (
         <form onSubmit={(event) => {
             event.preventDefault();
-            if(isValid()){
+            if(possoEnviar()){
                 aoEnviar({email, senha});
             }
         }}>
