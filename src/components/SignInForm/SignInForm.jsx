@@ -1,74 +1,45 @@
-import React, {useState} from "react";
-import {Button, TextField, Switch, FormControlLabel} from "@material-ui/core";
+import React, {Fragment, useEffect, useState} from "react";
+import PersonalData from "./PersonalData";
+import UserData from "./UserData";
+import DeliveryForm from "./DeliveryForm";
+import {Step, StepLabel, Stepper, Typography} from "@material-ui/core";
 
-function SignInForm({aoEnviar, validaCPF}) {
-    const [nome, setNome] = useState('');
-    const [sobreNome, setSobreNome] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [promocoes, setPromocoes] = useState(true);
-    const [novidades, setNovidade] = useState(true);
-    const [erros, setErros] = useState({
-        cpf: {valido: true, helpText: ''}
-    });
+function SignInForm({aoEnviar, validacoes}) {
+    const [actualStep, setActualStep] = useState(0);
+    const [collectedData, setCollectedData] = useState({});
+
+    const forms = [
+        <UserData aoEnviar={getData}/>,
+        <PersonalData aoEnviar={getData}/>,
+        <DeliveryForm aoEnviar={getData}/>,
+        <Typography variant='h5'>Obrigado por se cadastrar</Typography>
+    ];
+
+    useEffect(() => {
+        if (actualStep === forms.length - 1) {
+            aoEnviar(collectedData);
+        }
+    })
+
+    function getData(data) {
+        setCollectedData({...collectedData, ...data});
+        setNextForm();
+    }
+
+    function setNextForm() {
+        setActualStep(actualStep + 1);
+    }
 
     return (
-        <form onSubmit={(event) => {
-            event.preventDefault();
-            aoEnviar({nome, sobreNome, cpf, novidades, promocoes});
-        }}>
-            <TextField
-                value={nome}
-                onChange={(event) => {
-                    let tmpNome = event.target.value;
-                    setNome(tmpNome);
-                }}
-                id='nome' label='Nome' type='text' variant='outlined' margin='normal' fullWidth/>
-
-            <TextField
-                value={sobreNome}
-                onChange={(event) => {
-                    setSobreNome(event.target.value);
-                }}
-                id='sobrenome' label='Sobrenome' type='text' variant='outlined' margin='normal' fullWidth/>
-
-            <TextField
-                value={cpf}
-                helperText={erros.cpf.helpText}
-                error={!erros.cpf.valido}
-                onBlur={(event)=>{
-                    const isValid = validaCPF(cpf);
-                    setErros(isValid);
-                }}
-                onChange={(event) => {
-                    let tmpCPF = event.target.value;
-                    if (tmpCPF.length <= 11) {
-                        setCpf(tmpCPF);
-                    }
-
-                }} id='cpf' label='CPF' type='text' variant='outlined' margin='normal' fullWidth/>
-
-            <FormControlLabel control={
-                <Switch name='Promoções'
-                        checked={promocoes}
-
-                        onChange={(event) => {
-                            setPromocoes(event.target.checked);
-                        }}
-                        color='primary'/>
-            } label='Promoções'/>
-
-            <FormControlLabel control={
-                <Switch name='Novidades'
-                        checked={novidades}
-                        onChange={(event) => {
-                            setNovidade(event.target.checked);
-                        }}
-                        color='primary'/>
-            } label='Novidades'/>
-
-
-            <Button type='submit' variant='contained' color='primary'>Cadastrar</Button>
-        </form>
+        <Fragment>
+            <Stepper activeStep={actualStep}>
+                <Step><StepLabel>Login</StepLabel></Step>
+                <Step><StepLabel>Dados Pessoais</StepLabel></Step>
+                <Step><StepLabel>Endereço</StepLabel></Step>
+                <Step><StepLabel>Finalização</StepLabel></Step>
+            </Stepper>
+            {forms[actualStep]}
+        </Fragment>
     )
 }
 
