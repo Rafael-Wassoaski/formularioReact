@@ -1,6 +1,7 @@
 import React, {useState, useContext} from "react";
 import {Button, TextField, Switch, FormControlLabel} from "@material-ui/core";
 import Validations from "../../contexts/Validations";
+import useErrors from "../../hooks/useErrors";
 
 function PersonalData({aoEnviar}) {
     const [nome, setNome] = useState('');
@@ -8,33 +9,13 @@ function PersonalData({aoEnviar}) {
     const [cpf, setCpf] = useState('');
     const [promocoes, setPromocoes] = useState(true);
     const [novidades, setNovidade] = useState(true);
-    const [erros, setErros] = useState({
-        cpf: {valido: true, helpText: ''}
-    });
-
     const validar = useContext(Validations);
-
-    function validarCampos(event) {
-        const {name, value} = event.target;
-        const isValid = validar[name](value);
-        const novoEstado = {...erros};
-        novoEstado[name] = isValid
-        setErros(novoEstado);
-    }
-
-    function isValid(){
-        for(let error in erros){
-            if(!erros[error].valido){
-                return false;
-            }
-        }
-        return true;
-    }
+    const [erros, validarCampos, possoEnviar] = useErrors(validar);
 
     return (
         <form onSubmit={(event) => {
             event.preventDefault();
-            if(isValid()){
+            if(possoEnviar()){
                 aoEnviar({nome, sobreNome, cpf, novidades, promocoes});
             }
         }}>
